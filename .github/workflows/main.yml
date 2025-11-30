@@ -49,17 +49,11 @@ jobs:
         with:
           name: dependency-check-report
           path: reports/
-
-      - name: npm audit
-        continue-on-error: true
-        run: |
-          npm audit --audit-level=high || true
-          npm audit fix || true
           
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.9'
           
       - name: Install dependencies
         run: pip install -r requirements.txt
