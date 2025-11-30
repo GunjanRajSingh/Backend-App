@@ -39,7 +39,7 @@ jobs:
       - name: OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
-          project: "todoapp"
+          project: "backend"
           scan: "./"
           format: "ALL"
           out: "./reports"
@@ -71,8 +71,8 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=todoapp
-            -Dsonar.projectName=todoapp
+            -Dsonar.projectKey=backend
+            -Dsonar.projectName=backend
 
       - name: Wait for SonarQube Quality Gate
         uses: sonarsource/sonarqube-quality-gate-action@master
@@ -110,7 +110,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.ACR_LOGIN_SERVER }}/todoapp:${{ env.IMAGE_TAG }}
+          tags: ${{ env.ACR_LOGIN_SERVER }}/backend:${{ env.IMAGE_TAG }}
           
       - name: Update image tag
         run: sed -i "s/__TAG__/${{ env.IMAGE_TAG }}/g" manifests/combo.yaml
@@ -124,7 +124,7 @@ jobs:
       - name: Trivy Image Scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.ACR_LOGIN_SERVER }}/todoapp:${{ env.IMAGE_TAG }}
+          image-ref: ${{ env.ACR_LOGIN_SERVER }}/backend:${{ env.IMAGE_TAG }}
           format: "table"
           severity: "CRITICAL,HIGH"
           exit-code: 0
@@ -171,11 +171,11 @@ jobs:
             --name ${{ env.AKS_CLUSTER_NAME }} \
             --overwrite-existing
 
-          kubectl create ns todoapp --dry-run=client -o yaml | kubectl apply -f -
-          kubectl apply -f manifests/ -n todoapp
+          kubectl create ns backend --dry-run=client -o yaml | kubectl apply -f -
+          kubectl apply -f manifests/ -n backend
 
-          kubectl get pods -n todoapp
-          kubectl get ingress -n todoapp -o wide
+          kubectl get pods -n backend
+          kubectl get ingress -n backend -o wide
 
       - name: Send Email Notification
         if: always()
@@ -185,7 +185,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASS }}
-          subject: "GitHub Actions Build ${{ job.status }}: todoapp CI/CD #${{ github.run_number }}"
+          subject: "GitHub Actions Build ${{ job.status }}: backend CI/CD #${{ github.run_number }}"
           html_body: |
             <p>Build: ${{ job.status }}</p>
             <p>Repository: ${{ github.repository }}</p>
