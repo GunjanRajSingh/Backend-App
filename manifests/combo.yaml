@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: aksclsuterregistry.azurecr.io/backend:__TAG__
+        image: devopsprodacr01.azurecr.io/backend:__TAG__
         ports:
         - containerPort: 8000
 ---
