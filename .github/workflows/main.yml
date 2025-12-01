@@ -146,6 +146,10 @@ jobs:
         with:
           name: manifests
           path: manifests/
+          
+      - name: Debug downloaded manifest
+        run: cat manifests/combo.yaml
+
 
       - name: Azure Login
         uses: azure/login@v2
