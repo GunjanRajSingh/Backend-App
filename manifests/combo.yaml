@@ -24,6 +24,9 @@ spec:
         # devopsprodacr01.azurecr.io/backend:__TAG__
         ports:
         - containerPort: 8000
+        env:
+        - name: CONNECTION_STRING
+          value: "${CONNECTION_STRING}"
 ---
 apiVersion: v1
 kind: Service
