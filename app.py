@@ -88,7 +88,7 @@ def create_task(task: Task):
     return task
 
 # Update an existing task by ID
-@app.put("/tasks/{task_id}")
+@app.put("/api/tasks/{task_id}")
 def update_task(task_id: int, updated_task: Task):
     with pyodbc.connect(connection_string) as conn:
         cursor = conn.cursor()
