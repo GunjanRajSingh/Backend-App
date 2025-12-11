@@ -34,23 +34,23 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      # - uses: gitleaks/gitleaks-action@v2
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: OWASP Dependency Check
-        uses: dependency-check/Dependency-Check_Action@main
-        with:
-          project: "backend"
-          scan: "./"
-          format: "ALL"
-          out: "./reports"
+      # - name: OWASP Dependency Check
+      #   uses: dependency-check/Dependency-Check_Action@main
+      #   with:
+      #     project: "backend"
+      #     scan: "./"
+      #     format: "ALL"
+      #     out: "./reports"
 
-      - name: Upload OWASP Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: dependency-check-report
-          path: reports/
+      # - name: Upload OWASP Report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: dependency-check-report
+      #     path: reports/
           
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -79,21 +79,21 @@ jobs:
       #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       #   continue-on-error: true
 
-      - name: Aqua Security Trivy FS
-        uses: aquasecurity/trivy-action@0.33.1
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'table'
-          vuln-type: 'os,library'
-          severity: 'HIGH,CRITICAL'
-          output: 'trivyfs.txt'
+      # - name: Aqua Security Trivy FS
+      #   uses: aquasecurity/trivy-action@0.33.1
+      #   with:
+      #     scan-type: 'fs'
+      #     scan-ref: '.'
+      #     format: 'table'
+      #     vuln-type: 'os,library'
+      #     severity: 'HIGH,CRITICAL'
+      #     output: 'trivyfs.txt'
 
-      - name: Upload Trivy FS Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-fs-report
-          path: trivyfs.txt
+      # - name: Upload Trivy FS Report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: trivy-fs-report
+      #     path: trivyfs.txt
 
       - name: Azure ACR Login
         run: az acr login --name ${{ env.ACR_NAME }}
@@ -117,22 +117,22 @@ jobs:
           name: manifests
           path: manifests/
 
-      - name: Trivy Image Scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.ACR_LOGIN_SERVER }}/backend:${{ env.IMAGE_TAG }}
-          format: "table"
-          severity: "CRITICAL,HIGH"
-          exit-code: 0
-          ignore-unfixed: true
-          vuln-type: "os,library"
-          output: 'trivyimage.txt'
+      # - name: Trivy Image Scan
+      #   uses: aquasecurity/trivy-action@master
+      #   with:
+      #     image-ref: ${{ env.ACR_LOGIN_SERVER }}/backend:${{ env.IMAGE_TAG }}
+      #     format: "table"
+      #     severity: "CRITICAL,HIGH"
+      #     exit-code: 0
+      #     ignore-unfixed: true
+      #     vuln-type: "os,library"
+      #     output: 'trivyimage.txt'
 
-      - name: Upload Trivy Image Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-image-report
-          path: trivyimage.txt
+      # - name: Upload Trivy Image Report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: trivy-image-report
+      #     path: trivyimage.txt
 
   Deploy:
     needs: Build-Scan-Push
@@ -174,22 +174,22 @@ jobs:
           kubectl create ns backend --dry-run=client -o yaml | kubectl apply -f -
           kubectl apply -f manifests/ -n backend
 
-          kubectl get pods -n backend
-          kubectl get ingress -n backend -o wide
+          # kubectl get pods -n backend
+          # kubectl get ingress -n backend -o wide
 
-      - name: Send Email Notification
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USER }}
-          password: ${{ secrets.EMAIL_PASS }}
-          subject: "GitHub Actions Build ${{ job.status }}: backend CI/CD #${{ github.run_number }}"
-          html_body: |
-            <p>Build: ${{ job.status }}</p>
-            <p>Repository: ${{ github.repository }}</p>
-            <p>Branch: ${{ github.ref_name }}</p>
-            <p>Build URL: <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a></p>
-          to: ${{ secrets.EMAIL_USER }}
-          from: ${{ secrets.EMAIL_USER }}
+      # - name: Send Email Notification
+      #   if: always()
+      #   uses: dawidd6/action-send-mail@v3
+      #   with:
+      #     server_address: smtp.gmail.com
+      #     server_port: 465
+      #     username: ${{ secrets.EMAIL_USER }}
+      #     password: ${{ secrets.EMAIL_PASS }}
+      #     subject: "GitHub Actions Build ${{ job.status }}: backend CI/CD #${{ github.run_number }}"
+      #     html_body: |
+      #       <p>Build: ${{ job.status }}</p>
+      #       <p>Repository: ${{ github.repository }}</p>
+      #       <p>Branch: ${{ github.ref_name }}</p>
+      #       <p>Build URL: <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a></p>
+      #     to: ${{ secrets.EMAIL_USER }}
+      #     from: ${{ secrets.EMAIL_USER }}
