@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: prodaksclusterregistry.azurecr.io/backend:40
+        image: myacr1210.azurecr.io/backend:v10
         # devopsprodacr01.azurecr.io/backend:__TAG__
         ports:
         - containerPort: 8000
