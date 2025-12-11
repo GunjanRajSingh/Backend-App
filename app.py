@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 #connection_string = os.getenv("CONNECTION_STRING")
-connection_string = "Driver={ODBC Driver 17 for SQL Server};Server=tcp:sqlserversid.database.windows.net,1433;Database=sqldatabasesid;Uid=Sqlserver;Pwd=Sql@1234;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+connection_string = "Driver={ODBC Driver 17 for SQL Server};Server=tcp:mysqlserver-gunjan.database.windows.net,1433;Database=mysqldatabase;Uid=mysqladmin;Pwd=Sql@pass;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
 
 app = FastAPI()
 
